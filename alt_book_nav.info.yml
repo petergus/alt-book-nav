@@ -1,0 +1,6 @@
+name: Alt book nav
+description: Alternative book navigation
+package: Custom
+type: module
+version: 1.0
+core: 8.x
