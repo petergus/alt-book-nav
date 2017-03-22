@@ -36,7 +36,9 @@ class CustomBookNavigationBlock extends BookNavigationBlock {
 
       // Only show the block if the user has view access for the top-level node.
       if ($nid) {
-        $tree = $this->bookManager->bookTreeAllData($node->book['bid'], $node->book);
+        // We want to show the whole tree, by just removing '$node->book'
+        // $tree = $this->bookManager->bookTreeAllData($node->book['bid'], $node->book);
+        $tree = $this->bookManager->bookTreeAllData($node->book['bid']);
         return $this->bookManager->bookTreeOutput($tree);
       }
     }
