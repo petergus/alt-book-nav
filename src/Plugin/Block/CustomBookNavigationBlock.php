@@ -18,11 +18,18 @@ class CustomBookNavigationBlock extends BookNavigationBlock {
    */
   public function build() {
     $current_bid = 0;
-      // ksm($this);
 
-    if ($node = $this->requestStack->getCurrentRequest()->get('node')) {
+    $node = $this->routeMatch->getParameter('node');
+    if ($node instanceof \Drupal\node\NodeInterface && !empty($node->book['bid'])) {
+      $nid = $node->id();
+      $current_bid = $node->book['bid'];
+    }
+    elseif (isset($this->configuration['articlenid'])) {
+      $nid = $this->configuration['articlenid'];
+      $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
       $current_bid = empty($node->book['bid']) ? 0 : $node->book['bid'];
     }
+
     if ($this->configuration['block_mode'] == 'all pages') {
       return parent::build();
     }
@@ -31,7 +38,7 @@ class CustomBookNavigationBlock extends BookNavigationBlock {
       // not show unpublished books.
       $nid = \Drupal::entityQuery('node')
         ->condition('nid', $node->book['bid'], '=')
-        ->condition('status', NODE_PUBLISHED)
+        ->condition('status', 1)
         ->execute();
 
       // Only show the block if the user has view access for the top-level node.
